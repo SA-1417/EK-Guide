@@ -1,0 +1,60 @@
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Take full viewport height */
+  padding: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 800px; /* Limit max width for larger screens */
+  margin-bottom: 20px;
+}
+
+.input-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px; /* Limit max width for larger screens */
+}
+
+.input-field {
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 100%; /* Take full width of parent */
+  max-width: 400px; /* Limit max width for input field */
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #0056b3; /* Darken on hover */
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+@media (max-width: 600px) {
+  .input-section {
+      flex-direction: column;
+  }
+}
