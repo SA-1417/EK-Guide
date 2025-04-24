@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
-import openai
+from openai import OpenAI
 import os
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
@@ -25,7 +25,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise RuntimeError("OpenAI API key is not set. Please check your .env file.")
 
-openai.api_key = api_key
+client = OpenAI(api_key=api_key)
 
 # Define Pydantic model for request data
 class UserResponse(BaseModel):
@@ -47,18 +47,15 @@ async def analyze_response(user_response: UserResponse):
             "highlighting any important EKG characteristics that they missed or misinterpreted. Generate this response as if you were a licensed physician speaking very succinctly to a student; do not call them user, address them personally."
         )
 
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",  
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=300,
             temperature=0.7
         )
 
-        feedback = response['choices'][0]['message']['content']
+        feedback = response.choices[0].message.content
         return JSONResponse(content={"feedback": feedback}, status_code=200)
-
-    except openai.error.OpenAIError as e:
-        raise HTTPException(status_code=500, detail=f"OpenAI API Error: {str(e)}")
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")

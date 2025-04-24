@@ -203,17 +203,36 @@ function EKGSimulator() {
     }, [numPulses]); 
 
     const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)',
+                },
+                ticks: {
+                    font: {
+                        family: "'Inter', sans-serif",
+                    },
+                },
             },
             x: {
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.1)',
+                },
                 ticks: {
-                    callback: (value) => value.toFixed(2), // Show decimal values for time
+                    callback: (value) => value.toFixed(2),
+                    font: {
+                        family: "'Inter', sans-serif",
+                    },
                 },
             },
         },
         plugins: {
+            legend: {
+                display: false,
+            },
             annotation: {
                 annotations: {},
             },
@@ -237,71 +256,74 @@ function EKGSimulator() {
     }
 
     return (
-        
         <div className="App">
-            
             <h1>EKG Simulator</h1>
-
+            
             <div className="chart-container">
-                {chartData && <Line data={chartData} options={{ responsive: true }} />}
+                {chartData && (
+                    <div style={{ height: '400px' }}>
+                        <Line data={chartData} options={chartOptions} />
+                    </div>
+                )}
             </div>
             
             <div className="input-section">
-                <input
-                    type="text"
-                    className="input-field"
-                    value={userDiagnosis}
-                    onChange={handleDiagnosisChange}
-                    placeholder="Enter your diagnosis..."
-                />
-                <input
-                    type="text"
-                    className="input-field"
-                    value={userReasoning}
-                    onChange={handleReasoningChange}
-                    placeholder="Enter your reasoning..."
-                />
-                <button className="button" onClick={checkDiagnosis}>Check your diagnosis</button>
+                <div>
+                    <label htmlFor="diagnosis">Your Diagnosis</label>
+                    <input
+                        id="diagnosis"
+                        className="input-field"
+                        type="text"
+                        value={userDiagnosis}
+                        onChange={handleDiagnosisChange}
+                        placeholder="Enter your diagnosis..."
+                    />
                 </div>
-            <div className="input-section">
-                <label htmlFor="time-dropdown">Select Time Duration:</label>
-                <select
-                    id="time-dropdown"
-                    value={numPulses}
-                    onChange={handleNumPulsesChange}
+
+                <div>
+                    <label htmlFor="reasoning">Your Reasoning</label>
+                    <textarea
+                        id="reasoning"
+                        className="input-field"
+                        value={userReasoning}
+                        onChange={handleReasoningChange}
+                        placeholder="Explain your reasoning..."
+                        rows="4"
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="pulses">Number of Pulses</label>
+                    <select
+                        id="pulses"
+                        className="input-field"
+                        value={numPulses}
+                        onChange={handleNumPulsesChange}
+                    >
+                        <option value="3">3 Pulses</option>
+                        <option value="5">5 Pulses</option>
+                    </select>
+                </div>
+
+                <button className="button" onClick={checkDiagnosis}>
+                    Submit Diagnosis
+                </button>
+                
+                <button 
+                    className="button" 
+                    onClick={simulateRandomEKG}
+                    style={{ marginTop: '1rem', backgroundColor: 'var(--text-secondary)' }}
                 >
-                    <option value={3}>3 seconds</option>
-                    <option value={5}>5 seconds</option>
-                </select>
-                {visibility && <div> {analysis} </div>}
-                <button className="button" onClick={simulateRandomEKG}>Generate New EKG</button>
+                    Generate New EKG
+                </button>
             </div>
 
-            
-            {showLabeledGraph && (
-                <div className="chart-container labeled">
-                    <h2>Labeled EKG Graph</h2>
-                    <Line
-                        data={{
-                            ...chartData,
-                            datasets: [
-                                {
-                                    ...chartData.datasets[0],
-                                    borderColor: "black"
-                                },
-                                ...wavePositions.map(({ type, time, color }) => ({
-                                    type: "scatter",
-                                    x: [chartData.labels[time]],
-                                    y: [chartData.datasets[0].data[time]],
-                                    mode: "markers+text",
-                                    text: type,
-                                    textposition: "top center",
-                                    marker: { color: color, size: 10 }
-                                }))
-                            ]
-                        }}
-                        options={chartOptions}
-                    />
+            {visibility && analysis && (
+                <div className="analysis-section">
+                    <h2>Analysis</h2>
+                    <div className="analysis-content">
+                        {analysis}
+                    </div>
                 </div>
             )}
         </div>
