@@ -91,9 +91,3 @@ Pratham Tamakuwala
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- RUHealth Hacks 2025 for the platform and opportunity
-- All contributors and supporters of the project
-- The open-source community for the amazing tools and libraries used in this project
